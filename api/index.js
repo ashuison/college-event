@@ -27,34 +27,6 @@ app.use(
 
 mongoose.connect(process.env.MONGO_URL);
 
-
-//from hrere
-const twilio = require("twilio");
-const client = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
-
-// Add the payment simulation route
-app.post("/api/simulate-payment", async (req, res) => {
-   const { phoneNumber, name, eventId } = req.body;
-
-   try {
-      const paymentStatus = "Payment successful";
-
-      // Send SMS using Twilio
-      await client.messages.create({
-         body: `Hi ${name}, your payment for event ID ${eventId} is confirmed!`,
-         from: process.env.TWILIO_PHONE_NUMBER,
-         to: phoneNumber,
-      });
-
-      res.status(200).json({ paymentStatus });
-   } catch (error) {
-      console.error("Error in simulate-payment:", error);
-      res.status(500).json({ error: "Failed to process payment simulation" });
-   }
-});
-
-
-//till herer
 const storage = multer.diskStorage({
    destination: (req, file, cb) => {
       cb(null, "uploads/");
@@ -274,7 +246,7 @@ app.delete("/tickets/:id", async (req, res) => {
    try {
       const ticketId = req.params.id;
       await Ticket.findByIdAndDelete(ticketId);
-      res.status(204).send();
+      res.status(204).send()
    } catch (error) {
       console.error("Error deleting ticket:", error);
       res.status(500).json({ error: "Failed to delete ticket" });
